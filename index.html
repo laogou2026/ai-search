@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 搜索助手</title>
+    <style>
+        body{background:#0a0a0a;color:#fff;font-family:system-ui;max-width:800px;margin:50px auto;padding:20px}
+        h1{color:#0f0}
+        input,button{padding:14px;background:#1a1a1a;color:#fff;border:1px solid #333;border-radius:12px}
+        button{background:#0f0;color:#000;font-weight:bold;cursor:pointer}
+        .box{display:flex;gap:10px;margin:20px 0}
+        #result{background:#1a1a1a;padding:20px;border-radius:12px;margin-top:20px}
+    </style>
+</head>
+<body>
+    <h1>🔍 AI 搜索助手</h1>
+    <div class="box">
+        <input type="text" id="query" placeholder="输入问题...">
+        <button onclick="search()">搜索</button>
+    </div>
+    <div id="result"></div>
+    <script>
+        async function search() {
+            const q = document.getElementById('query').value;
+            if (!q) return;
+            const r = document.getElementById('result');
+            r.innerHTML = '🤔 思考中...';
+            try {
+                const res = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: q })
+                });
+                const data = await res.json();
+                r.innerHTML = '<strong>回答：</strong><br>' + data.answer;
+            } catch(e) {
+                r.innerHTML = '错误：' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>
